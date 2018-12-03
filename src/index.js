@@ -6,6 +6,7 @@
  */
 let DEBUG = false;
 let API_KEY = null;
+let LANGUAGE = null;
 const GOOGLE_API = "https://maps.google.com/maps/api/geocode/json";
 
 function log(message, warn = false) {
@@ -47,6 +48,10 @@ export default {
   setApiKey(apiKey) {
     API_KEY = apiKey;
   },
+  
+   setLanguage(language) {
+    LANGUAGE = language;
+  },
 
   /**
    *
@@ -65,7 +70,7 @@ export default {
    * @param {string} [apiKey]
    * @returns {Promise}
    */
-  async fromLatLng(lat, lng, apiKey) {
+  async fromLatLng(lat, lng, apiKey, language) {
     if (!lat || !lng) {
       log("Provided coordinates are invalid", true);
       return Promise.reject(new Error("Provided coordinates are invalid"));
@@ -78,6 +83,11 @@ export default {
       API_KEY = apiKey || API_KEY;
       url += `&key=${API_KEY}`;
     }
+    
+    if (language || LANGUAGE) {
+      LANGUAGE = language || LANGUAGE;
+      url += `&language=${LANGUAGE}`;
+    }
 
     return handleUrl(url);
   },
@@ -89,7 +99,7 @@ export default {
    * @param {string} [apiKey]
    * @returns {Promise}
    */
-  async fromAddress(address, apiKey) {
+  async fromAddress(address, apiKey, language) {
     if (!address) {
       log("Provided address is invalid", true);
       return Promise.reject(new Error("Provided address is invalid"));
@@ -100,6 +110,11 @@ export default {
     if (apiKey || API_KEY) {
       API_KEY = apiKey || API_KEY;
       url += `&key=${API_KEY}`;
+    }
+    
+    if (language || LANGUAGE) {
+      LANGUAGE = language || LANGUAGE;
+      url += `&language=${LANGUAGE}`;
     }
 
     return handleUrl(url);
